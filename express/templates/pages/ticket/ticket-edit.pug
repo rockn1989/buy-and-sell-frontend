@@ -1,0 +1,52 @@
+extends ../../layout.pug
+
+block content
+  main.page-content
+    section.ticket-form
+      .ticket-form__wrapper
+        h1.ticket-form__title Редактировать публикацию
+        .ticket-form__tile
+          form.ticket-form__form.form(action=`/offers/edit/${offer.id}` method='POST' enctype='multipart/form-data' autocomplete='off')
+            input(type="hidden" name="_csrf" value=csrfToken)
+            .ticket-form__avatar-container.js-preview-container.uploaded
+              .ticket-form__avatar.js-preview
+                if offer.picture
+                  img(src=`/img/${offer.picture}` alt='')
+              .ticket-form__field-avatar
+                input.visually-hidden(type='file' name='old-picture' value=`${offer.picture}`)
+                input#picture.visually-hidden.js-file-field(type='file' name='picture')
+                label(for='picture')
+                  span.ticket-form__text-upload Загрузить фото…
+                  span.ticket-form__text-another Загрузить другое фото…
+            .ticket-form__content
+              .ticket-form__row
+                .form__field
+                  input#ticket-name.js-field(type='text' name='title' value=`${offer.title}` required='')
+                  label(for='ticket-name') Название
+                  span Обязательное поле
+              .ticket-form__row
+                .form__field
+                  textarea#comment-field.js-field(name='description' cols='30' rows='10' maxlength='400' minlength='50')
+                    | #{offer.description}
+                  label(for='comment-field') Описание
+                  span Обязательное поле
+              .ticket-form__row
+                select#category-field.form__select.js-multiple-select(name='category' data-label='Выбрать категорию публикации' multiple='')
+
+                  each category of categories
+                    option(value=`${category.id}` selected=offer.categories.includes(category.name)) #{category.name}
+              .ticket-form__row
+                .form__field.form__field--price
+                  input#price-field.js-field.js-price(type='number' name='sum' min='1' value=`${offer.sum}` required='')
+                  label(for='price-field') Цена
+                  span Обязательное поле
+                .form__switch.switch
+                  .switch__item
+                    input#buy-field.visually-hidden(type='radio' name='type' value='buy' checked=(offer.type === `buy`))
+                    label.switch__button(for='buy-field') Куплю
+                  .switch__item
+                    input#sell-field.visually-hidden(type='radio' name='type' value='sale' checked=(offer.type === `sell`))
+                    label.switch__button(for='sell-field') Продам
+            if errorMessages
+              +showMessages(errorMessages)
+            button.form__button.btn.btn--medium.js-button(type='submit') Сохранить

@@ -1,0 +1,39 @@
+extends ../layout.pug
+
+block content
+  main.page-content
+    section.sign-up
+      form.sign-up__form.form(action='/sign-up' method='post' enctype='multipart/form-data' autocomplete='off')
+        input(type="hidden" name="_csrf" value=csrfToken)
+        .sign-up__title
+          h2 Регистрация
+          a.sign-up__link(href='/login') Вход
+        .sign-up__avatar-container.js-preview-container
+          .sign-up__avatar.js-preview
+          .sign-up__field-avatar
+            input#avatar.visually-hidden.js-file-field(type='file' name='avatar')
+            label(for='avatar')
+              span.sign-up__text-upload Загрузить аватар…
+              span.sign-up__text-another Загрузить другой аватар…
+        .form__field.sign-up__field
+          input#name.js-field(type='text' name='firstname' required='')
+          label(for='firstname') Имя
+          span Обязательное поле
+        .form__field.sign-up__field
+          input#name.js-field(type='text' name='lastname' required='')
+          label(for='lastname') Фамилия
+          span Обязательное поле
+        .form__field.sign-up__field
+          input#email.js-field(type='email' name='email' required='')
+          label(for='email') Эл. почта
+          span Обязательное поле
+        .form__field.sign-up__field
+          input#password.js-field(type='password' name='password' required='')
+          label(for='password') Пароль
+          span Обязательное поле
+        .form__field.sign-up__field
+          input#password-again.js-field(type='password' name='password-repeated' required='')
+          label(for='password-repeated') Пароль еще раз
+          span Обязательное поле
+        +showMessages(errorsList)
+        button.sign-up__button.btn.btn--medium.js-button(type='submit' disabled='') Создать аккаунт

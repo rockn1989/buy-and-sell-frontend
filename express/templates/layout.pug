@@ -1,0 +1,84 @@
+mixin getPagintaion(currentPage, offersCount, limit)
+  -
+    const items = new Array(offersCount).fill(``);
+    let page = 1;
+
+  .tickets-list__pagination
+    ul.pagination
+      each val, index in items
+        if index == 0 && currentPage - 1 != 0
+          li
+            a(href=`?page=${currentPage - 1}`)='Назад'
+
+        if index % limit == 0
+          li
+            a(href=(page == currentPage ? `#` : `?page=${page}`) class={active: page == currentPage})=page++
+
+        if currentPage < (items.length / limit) && index == items.length - 1
+          li
+            a(href=`?page=${currentPage + 1}`)='Вперед'
+
+-
+  const getRandomInt = (max) => Math.ceil(Math.random()*max);
+
+mixin categoryImage(category)
+  -
+    const idPadded = `0${getRandomInt(6)}`
+
+  img(src=`/img/cat${idPadded}.jpg` srcset=`/img/cat${idPadded}@2x.jpg 2x` alt=category.name)
+
+mixin formatDate(date, onlyDate)
+  -
+    const convertDate = (dateString) => {
+      const date = new Date(dateString);
+      let format;
+      if(onlyDate) {
+        format = date.toLocaleString(`ru-RU`, {year: `numeric`, month: `long`, day: `numeric`});
+      } else {
+        format = date.toLocaleString(`ru-RU`, {year: `numeric`, month: `long`, day: `numeric`, hour: `2-digit`, minute: `2-digit`});
+      }
+      return format;
+    }
+  span #{convertDate(date)}
+
+mixin showMessages(messages)
+  if messages
+    each message in messages
+      .server-error= message
+
+mixin ticketCard()
+  .ticket-card(class = `ticket-card--color0${getRandomInt(8)}`)
+    block
+
+doctype html
+html(lang='ru')
+  head
+    meta(charset='UTF-8')
+    meta(name='description' content='Доска объявлений — современный веб-сайт, упрощающий продажу или покупку абсолютно любых вещей.')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    meta(http-equiv='X-UA-Compatible' content='ie=edge')
+    title Куплю Продам
+    link(rel='stylesheet' href='/css/style.min.css')
+    style.
+      a.active{
+        pointer-events: none;
+      }
+      .server-error{
+        border-radius: 10px;
+        color: white;
+        background-color: tomato;
+        margin: 20px 0;
+        padding: 10px;
+      }
+      .comment-card__date{
+        margin-left: 10px;
+      }
+  body
+    include ./partials/header.pug
+    block content
+    include ./partials/footer.pug
+    include ./partials/offer-template.pug
+    script(src='/js/socket.io.js')
+    script(src='/js/vendor.js')
+    script(src='/js/main.js')
+    script(src='/js/socket.js')

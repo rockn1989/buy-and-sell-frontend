@@ -1,0 +1,30 @@
+extends ../layout.pug
+
+block content
+  section.tickets-list
+    h2.visually-hidden Предложения из категории электроника
+    .tickets-list__wrapper
+      .tickets-list__header
+        p.tickets-list__title
+          | #{category.name}
+          b.js-qty  #{count}
+      ul
+        for offer of offersByCategory
+          li.tickets-list__item
+            .ticket-card.ticket-card--color06
+              .ticket-card__img
+                img(src=`/img/${offer.picture}` srcset=`/img/${offer.picture} x2` alt='Изображение товара')
+              .ticket-card__info
+                span.ticket-card__label #{offer.type}
+                .ticket-card__categories
+                  for category of offer.categories
+                    a(href=`/offers/category/${category.id}`) #{category.name}
+                .ticket-card__header
+                  h3.ticket-card__title
+                    a(href=`/offers/${offer.id}`) #{offer.title}
+                  p.ticket-card__price
+                    span.js-sum #{offer.sum}
+                    |  ₽
+                .ticket-card__desc
+                  p #{offer.description}
+      +getPagintaion(page, count, limit)

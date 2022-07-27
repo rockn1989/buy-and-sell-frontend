@@ -1,0 +1,60 @@
+extends ../../layout.pug
+
+block content
+  main.page-content
+    section.ticket
+      .ticket__wrapper
+        h1.visually-hidden Карточка объявления
+        .ticket__content
+          .ticket__img
+            img(src=`/img/${offer.picture}` alt='Изображение товара')
+          .ticket__info
+            h2.ticket__title #{offer.title}
+            .ticket__header
+              p.ticket__price
+                span.js-sum #{offer.sum}
+                |  ₽
+              p.ticket__action #{offer.type}
+            .ticket__desc
+              p
+                | #{offer.description}
+            .ticket__data
+              p
+                b Дата добавления:
+                +formatDate(offer.createdAt, true)
+              p
+                b Автор:
+                a(href='#')  #{offer.users.firstname} #{offer.users.lastname}
+              p
+                b Контакты:
+                a(href=`mailto:${offer.users.email}`)  #{offer.users.email}
+            ul.ticket__tags
+              each category of offer.categories
+                li
+                  a.category-tile.category-tile--small(href=`/offers/category/${category.id}`)
+                    span.category-tile__image
+                      +categoryImage(category)
+                    span.category-tile__label #{category.name}
+        .ticket__comments
+          if user
+            include ../../partials/comments-form.pug
+          else
+            include ../../partials/comments-warning.pug
+          if offer.comments && offer.comments.length >= 1
+            h2.ticket__subtitle Коментарии
+            .ticket__comments-list
+              ul.comments-list
+                  each comments of offer.comments
+                    li
+                      .comment-card
+                        .comment-card__header
+                          a.comment-card__avatar.avatar(href=`${comments.users.id}`)
+                            img(src=`/img/${comments.users.avatar}` srcset=`/img/${comments.users.avatar}` alt='Аватар пользователя')
+                          p.comment-card__author #{comments.users.firstname} #{comments.users.lastname}
+                          p.comment-card__date
+                            +formatDate(comments.createdAt)
+                        .comment-card__content
+                          p #{comments.text}
+          else
+            include ../../partials/comments-empty.pug
+

@@ -1,0 +1,37 @@
+extends ../layout.pug
+
+block content
+  main.page-content
+    section.comments
+      .comments__wrapper
+        h1.visually-hidden Страница комментариев
+
+        if errorMessage
+          p.server-error=errorMessage
+
+        if offers && offers.length > 0
+          for offer of offers
+            .comments__block
+              .comments__header
+                a.announce-card(href=`/offers/${offer.id}`)
+                  h2.announce-card__title #{offer.title}
+                  span.announce-card__info
+                    span.announce-card__price ₽ #{offer.sum}
+                    span.announce-card__type #{offer.type}
+              ul.comments-list
+                each comment of offer.comments
+                  li.js-card
+                    .comment-card
+                      .comment-card__header
+                        a.comment-card__avatar.avatar(href='#')
+                          img(src=`/img/${comment.users.avatar}` alt='Аватар пользователя')
+                        p.comment-card__author #{comment.users.firstname} #{comment.users.lastname}
+                      .comment-card__content
+                        p
+                          | #{comment.text}
+                      form(action=`/offers/${offer.id}/comments/${comment.id}` method="POST")
+                        input(type="hidden" name="_csrf" value=csrfToken)
+                        button.comment-card__delete(type='submit') Удалить
+        else
+          span
+            | Вы пока что не оставили ни одного комментария
