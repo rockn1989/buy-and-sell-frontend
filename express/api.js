@@ -1,54 +1,56 @@
-'use strict';
+"use strict";
 
 const axios = require(`axios`);
 
 const TIMEOUT = 1000;
 const port = process.env.API_PORT || 3000;
-const defaultURL = `http://localhost:${port}/api/`;
+const defaultURL =
+  process.env.NODE_ENV === `development`
+    ? `http://localhost:${port}/api/`
+    : `https://rock-n-buyandsell-api.herokuapp.com/api/`;
 
 class API {
   constructor(baseURL, timeout) {
-
     this._https = axios.create({
       baseURL,
-      timeout
+      timeout,
     });
   }
 
   async _load(url, options) {
-    const response = await this._https.request({url, ...options});
+    const response = await this._https.request({ url, ...options });
     return response.data;
   }
 
   async getCategories(count) {
     return await this._load(`/categories`, {
-      params: count
+      params: count,
     });
   }
 
-  async getCategory(id, {limit, offset}) {
+  async getCategory(id, { limit, offset }) {
     return await this._load(`/categories/${id}`, {
-      params: {limit, offset}
+      params: { limit, offset },
     });
   }
 
-  async getOffers({limit, comments, offset, topOffers, id, roleId} = {}) {
+  async getOffers({ limit, comments, offset, topOffers, id, roleId } = {}) {
     return this._load(`/offers`, {
-      params: {limit, offset, comments, topOffers, id, roleId},
-      data: {id, roleId}
+      params: { limit, offset, comments, topOffers, id, roleId },
+      data: { id, roleId },
     });
   }
 
   async getOffer(id, comments) {
     return this._load(`/offers/${id}`, {
-      params: comments
+      params: comments,
     });
   }
 
   async createComment(id, data) {
     return this._load(`/offers/${id}/comments`, {
       method: `POST`,
-      data
+      data,
     });
   }
 
@@ -58,25 +60,25 @@ class API {
 
   async getUserComments(userId) {
     return this._load(`/offers/comments`, {
-      params: {userId}
+      params: { userId },
     });
   }
 
   async deleteComment(offerId, commentId, user) {
     return this._load(`/offers/${offerId}/comments/${commentId}`, {
       method: `DELETE`,
-      data: {user}
+      data: { user },
     });
   }
 
   async search(query) {
-    return this._load(`/search`, {params: {query}});
+    return this._load(`/search`, { params: { query } });
   }
 
   async createOffer(data) {
     return this._load(`/offers`, {
       method: `POST`,
-      data
+      data,
     });
   }
 
@@ -85,36 +87,35 @@ class API {
       method: `PUT`,
       data: {
         offerData,
-        userId
-      }
+        userId,
+      },
     });
   }
 
   async deleteOffer(id) {
     return this._load(`/offers/${id}`, {
-      method: `DELETE`
+      method: `DELETE`,
     });
   }
 
   async createUser(data) {
     return this._load(`/user/register`, {
       method: `POST`,
-      data
+      data,
     });
   }
 
   async auth(data) {
     return this._load(`/user/auth`, {
       method: `POST`,
-      data
+      data,
     });
   }
 
   async refresh(token) {
-
     return this._load(`/user/refresh`, {
       method: `POST`,
-      data: {token},
+      data: { token },
     });
   }
 }
@@ -123,5 +124,5 @@ const defaultAPI = new API(defaultURL, TIMEOUT);
 
 module.exports = {
   API,
-  getAPI: () => defaultAPI
+  getAPI: () => defaultAPI,
 };
