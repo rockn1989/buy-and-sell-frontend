@@ -75,4 +75,4 @@ app.use((req, res) => {
 app.set(`views`, path.resolve(__dirname, `templates`));
 app.set(`view engine`, `pug`);
 
-app.listen(8080);
+app.listen(process.env.PORT || 8080);
