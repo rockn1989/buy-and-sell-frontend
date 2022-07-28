@@ -9,7 +9,7 @@
     "eslint": "eslint --ext .js src/",
     "start": "nodemon -r dotenv/config ./express/express.js",
     "start-front-server": "nodemon -r dotenv/config ./express/express.js",
-    "start-front-server-prod": "-r dotenv/config ./express/express.js",
+    "start-front-server-prod": "-r dotenv/config ./express/express.js"
   },
   "repository": {
     "type": "git",
